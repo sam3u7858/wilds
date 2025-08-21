@@ -15,19 +15,32 @@ class CharmUI {
     this.skillHoverLevels = {};
     this.showUserMenu = false;
     this.userMenuAnimation = false;
+    this.isEnglish = window.location.pathname.includes("/eng/");
 
-    // 技能選擇器狀態
-    this.skillCategories = [
-      { id: "all", name: "全部" },
-      { id: "weapon_skills", name: "武器技能" },
-      { id: "armor_slot1", name: "防具一洞技能" },
-      { id: "armor_slot2", name: "防具二洞技能" },
-      { id: "armor_slot3", name: "防具三洞技能" },
-      { id: "attack", name: "攻擊系" },
-      { id: "defense", name: "防禦系" },
-      { id: "element", name: "屬性系" },
-      { id: "utility", name: "輔助系" },
-    ];
+    // Skill selector state (now language-dependent)
+    this.skillCategories = this.isEnglish
+      ? [
+          { id: "all", name: "All" },
+          { id: "weapon_skills", name: "Weapon Skills" },
+          { id: "armor_slot1", name: "Armor Slot 1" },
+          { id: "armor_slot2", name: "Armor Slot 2" },
+          { id: "armor_slot3", name: "Armor Slot 3" },
+          { id: "attack", name: "Attack" },
+          { id: "defense", name: "Defense" },
+          { id: "element", name: "Element" },
+          { id: "utility", name: "Utility" },
+        ]
+      : [
+          { id: "all", name: "全部" },
+          { id: "weapon_skills", name: "武器技能" },
+          { id: "armor_slot1", name: "防具一洞技能" },
+          { id: "armor_slot2", name: "防具二洞技能" },
+          { id: "armor_slot3", name: "防具三洞技能" },
+          { id: "attack", name: "攻擊系" },
+          { id: "defense", name: "防禦系" },
+          { id: "element", name: "屬性系" },
+          { id: "utility", name: "輔助系" },
+        ];
     this.selectedCategory = "all";
     this.searchQuery = "";
 
@@ -245,14 +258,15 @@ class CharmUI {
       card.classList.add("incompatible");
     }
 
+    const skillName = this.isEnglish ? skill.nameEn : skill.nameZh;
     const recommendationText = this.getRecommendationText(skill.id);
 
     card.innerHTML = `
-            <img src="./public/imgs/${skill.color}.png" alt="${
-      skill.nameZh
-    }" class="skill-icon" />
+            <img src="../public/imgs/${
+              skill.color
+            }.png" alt="${skillName}" class="skill-icon" />
             <div class="skill-info">
-                <span class="skill-name">${skill.nameZh}</span>
+                <span class="skill-name">${skillName}</span>
                 <span class="skill-level-info" ${levelInfoStyle}>${recommendationText}</span>
             </div>
             <div class="available-levels">
@@ -300,7 +314,10 @@ class CharmUI {
         this.selectedSkills
       );
       if (suggestion.adjustment) {
-        return `可選，但需調整 ${suggestion.originalSkillName}`;
+        const skillName = this.isEnglish
+          ? suggestion.originalSkillNameEn
+          : suggestion.originalSkillName;
+        return `Requires adjusting ${skillName}`;
       }
     }
 
@@ -318,13 +335,13 @@ class CharmUI {
     }
 
     if (recommendedLevel === -1) {
-      return `不相容`;
+      return this.isEnglish ? "Incompatible" : "不相容";
     }
 
     if (recommendedLevel === maxLevel) {
-      return `推薦 Lv.${recommendedLevel} (相容)`;
+      return `Lv.${recommendedLevel} (Compatible)`;
     } else {
-      return `推薦 Lv.${recommendedLevel} (最佳組合)`;
+      return `Lv.${recommendedLevel} (Optimal)`;
     }
   }
 
@@ -479,6 +496,7 @@ class CharmUI {
    */
   createSelectedSkillItem(skill) {
     const maxLevel = window.CharmData.getMaxSkillLevel(skill.id);
+    const skillName = this.isEnglish ? skill.nameEn : skill.nameZh;
 
     const item = document.createElement("div");
     item.className = "skill-item";
@@ -494,12 +512,12 @@ class CharmUI {
     }
 
     item.innerHTML = `
-            <img src="./public/imgs/${skill.color}.png" alt="${
-      skill.nameZh
-    }" class="skill-icon" />
+            <img src="../public/imgs/${
+              skill.color
+            }.png" alt="${skillName}" class="skill-icon" />
             <div class="skill-info">
                 <div class="skill-header">
-                    <span class="skill-name">${skill.nameZh}</span>
+                    <span class="skill-name">${skillName}</span>
                 </div>
                 <div class="skill-dots" onmouseleave="clearSkillHover('${
                   skill.id
@@ -521,7 +539,7 @@ class CharmUI {
             <button onclick="window.charmUI.removeSkill('${
               skill.id
             }')" class="delete-skill">
-                <img src="./public/imgs/trash.png" alt="刪除" class="trash-icon" />
+                <img src="../public/imgs/trash.png" alt="Delete" class="trash-icon" />
             </button>
         `;
 
@@ -597,10 +615,13 @@ class CharmUI {
   renderEmptyState() {
     const resultsContent = document.getElementById("resultsContent");
     if (!resultsContent) return;
+    const text = this.isEnglish
+      ? "Please select skills or set slots to start calculation."
+      : "請選擇技能或設定鑲嵌槽來開始計算";
 
     resultsContent.innerHTML = `
             <div class="empty-state">
-                <div class="empty-text">請選擇技能或設定鑲嵌槽來開始計算</div>
+                <div class="empty-text">${text}</div>
             </div>
         `;
   }
@@ -611,11 +632,12 @@ class CharmUI {
   renderLoadingState() {
     const resultsContent = document.getElementById("resultsContent");
     if (!resultsContent) return;
+    const text = this.isEnglish ? "Calculating..." : "計算中...";
 
     resultsContent.innerHTML = `
             <div class="loading-state">
                 <div class="loading-spinner"></div>
-                <div class="loading-text">計算中...</div>
+                <div class="loading-text">${text}</div>
             </div>
         `;
   }
@@ -626,22 +648,28 @@ class CharmUI {
   renderNoResults() {
     const resultsContent = document.getElementById("resultsContent");
     if (!resultsContent) return;
+    const text = this.isEnglish
+      ? "Oops. Nothing here."
+      : "喔ㄛ。這裡什麼都沒有。";
+    const detailsButtonText = this.isEnglish
+      ? this.showFailureDetails
+        ? "Hide Details"
+        : "Show Details"
+      : this.showFailureDetails
+      ? "隱藏詳細資料"
+      : "顯示詳細資料";
 
     let html = `
             <div class="no-results">
                 <div class="no-results-container">
                     <div class="no-results-text">
-                        喔ㄛ。這裡什麼都沒有。
+                        ${text}
                         <button class="details-toggle" onclick="window.charmUI.toggleFailureDetails()">
-                            (${
-                              this.showFailureDetails
-                                ? "隱藏詳細資料"
-                                : "顯示詳細資料"
-                            })
+                            (${detailsButtonText})
                         </button>
                     </div>
                     <div class="no-results-illustration">
-                        <img src="./public/imgs/404.png" alt="No results" class="no-results-image" />
+                        <img src="../public/imgs/404.png" alt="No results" class="no-results-image" />
                     </div>
         `;
 
@@ -662,17 +690,20 @@ class CharmUI {
    */
   renderFailureAnalysis() {
     if (!this.failureAnalysis) return "";
+    const title = this.isEnglish ? "Failure Analysis" : "失敗原因分析";
+    const reasonsTitle = this.isEnglish ? "Reasons" : "問題原因";
+    const suggestionsTitle = this.isEnglish ? "Suggestions" : "建議解決方案";
 
     let html = `
             <div class="failure-analysis">
-                <h3 class="analysis-title">失敗原因分析</h3>
+                <h3 class="analysis-title">${title}</h3>
         `;
 
     // 問題原因
     if (this.failureAnalysis.reasons.length > 0) {
       html += `
                 <div class="analysis-section">
-                    <h4 class="analysis-subtitle">問題原因</h4>
+                    <h4 class="analysis-subtitle">${reasonsTitle}</h4>
                     <ul class="analysis-list">
                         ${this.failureAnalysis.reasons
                           .map(
@@ -689,7 +720,7 @@ class CharmUI {
     if (this.failureAnalysis.suggestions.length > 0) {
       html += `
                 <div class="analysis-section">
-                    <h4 class="analysis-subtitle">建議解決方案</h4>
+                    <h4 class="analysis-subtitle">${suggestionsTitle}</h4>
                     <ul class="analysis-list">
                         ${this.failureAnalysis.suggestions
                           .map(
@@ -721,39 +752,50 @@ class CharmUI {
     const resultsContent = document.getElementById("resultsContent");
     if (!resultsContent) return;
 
+    const headerText = this.isEnglish
+      ? "Good news, this combination is possible!"
+      : "好消息，這樣的組合是存在的！";
+    const shareButtonText = this.isEnglish ? "Share Results" : "分享結果";
+
     let html = `
             <div class="results-found">
                 <div class="result-header">
                     <div class="result-text">
-                        好消息，這樣的組合是存在的！<br />
+                        ${headerText}<br />
         `;
 
     if (this.timeEstimation) {
+      const timeText = window.CharmCalculator.formatTimeEstimation(
+        this.timeEstimation
+      );
+      const line1 = this.isEnglish
+        ? `On average, you'll need to wait <span>${this.boldDigits(
+            timeText
+          )}</span>`
+        : `根據計算，你平均要等待 <span>${this.boldDigits(timeText)}</span>`;
+      const line2 = this.isEnglish
+        ? `to appraise such a charm, with an expected value of <strong>${this.timeEstimation.expectedAppraisals}</strong> appraisals.`
+        : `才能鑑定到這樣一顆護石，期望值為 <strong>${this.timeEstimation.expectedAppraisals}</strong>次`;
       html += `
                         <span>
-                            根據計算，你平均要等待
-                            <span>${this.boldDigits(
-                              window.CharmCalculator.formatTimeEstimation(
-                                this.timeEstimation
-                              )
-                            )}</span>
-                            才能鑑定到這樣一顆護石，期望值為
-                            <strong>${
-                              this.timeEstimation.expectedAppraisals
-                            }</strong>次
+                           ${line1} ${line2}
                         </span>
             `;
     }
 
+    const belowText = this.isEnglish
+      ? "<br />Here are the charms that meet the criteria:"
+      : "<br />以下是符合條件的護石：";
+
     html += `
-                        <br />以下是符合條件的護石：
+                        ${belowText}
                     </div>
                     <div class="share-section">
                         <button class="share-button" onclick="showShareModal()">
                             <svg class="share-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M18 16.08C17.24 16.08 16.56 16.38 16.04 16.85L8.91 12.7C8.96 12.47 9 12.24 9 12C9 11.76 8.96 11.53 8.91 11.3L15.96 7.19C16.5 7.69 17.21 8 18 8C19.66 8 21 6.66 21 5C21 3.34 19.66 2 18 2C16.34 2 15 3.34 15 5C15 5.24 15.04 5.47 15.09 5.7L8.04 9.81C7.5 9.31 6.79 9 6 9C4.34 9 3 10.34 3 12C3 13.66 4.34 15 6 15C6.79 15 7.5 14.69 8.04 14.19L15.16 18.34C15.11 18.55 15.08 18.77 15.08 19C15.08 20.61 16.39 21.92 18 21.92C19.61 21.92 20.92 20.61 20.92 19C20.92 17.39 19.61 16.08 18 16.08Z" fill="currentColor"/>
                             </svg>
-                            分享結果
+                            ${shareButtonText}
                         </button>
                     </div>
                 </div>
@@ -779,9 +821,16 @@ class CharmUI {
   renderResultCard(result, index) {
     const skillTags = result.detailedSkills
       ? result.detailedSkills
-          .map((skill) => `${skill.nameZh}${skill.level}`)
+          .map(
+            (skill) =>
+              `${this.isEnglish ? skill.nameEn : skill.nameZh}${skill.level}`
+          )
           .join("、")
       : "";
+
+    const templateName = this.isEnglish
+      ? result.template.labelEn || result.template.labelZh
+      : result.template.labelZh;
 
     return `
             <div class="result-card">
@@ -790,20 +839,30 @@ class CharmUI {
                         ${
                           result.detailedSkills &&
                           result.detailedSkills.length > 0
-                            ? `<img src="./public/imgs/${result.detailedSkills[0].color}.png" alt="${result.detailedSkills[0].nameZh}" class="template-icon" />`
-                            : `<img src="./public/imgs/placeholder_icon.png" alt="護石" class="template-icon" />`
+                            ? `<img src="../public/imgs/${
+                                result.detailedSkills[0].color
+                              }.png" alt="${
+                                this.isEnglish
+                                  ? result.detailedSkills[0].nameEn
+                                  : result.detailedSkills[0].nameZh
+                              }" class="template-icon" />`
+                            : `<img src="../public/imgs/placeholder_icon.png" alt="Charm" class="template-icon" />`
                         }
                         <div class="template-details">
-                            <div class="template-name">${result.rarity} ${
-      result.template.labelZh
-    }</div>
+                            <div class="template-name">${
+                              result.rarity
+                            } ${templateName}</div>
                             <div class="template-skills">
                                 ${
                                   result.detailedSkills
                                     ? result.detailedSkills
                                         .map(
                                           (skill) =>
-                                            `<div class="skill-tag">${skill.nameZh}${skill.level}</div>`
+                                            `<div class="skill-tag">${
+                                              this.isEnglish
+                                                ? skill.nameEn
+                                                : skill.nameZh
+                                            }${skill.level}</div>`
                                         )
                                         .join("")
                                     : ""
@@ -842,31 +901,41 @@ class CharmUI {
     return `
             <div class="detailed-breakdown">
                 <div class="breakdown-row">
-                    <span class="label">稀有度機率:</span>
+                    <span class="label">${
+                      this.isEnglish ? "Rarity Chance:" : "稀有度機率:"
+                    }</span>
                     <span class="value">${window.CharmCalculator.formatProbability(
                       details.rarityWeight
                     )}</span>
                 </div>
                 <div class="breakdown-row">
-                    <span class="label">模板機率:</span>
+                    <span class="label">${
+                      this.isEnglish ? "Template Chance:" : "模板機率:"
+                    }</span>
                     <span class="value">${window.CharmCalculator.formatProbability(
                       details.templateWeight
                     )}</span>
                 </div>
                 <div class="breakdown-row">
-                    <span class="label">技能機率:</span>
+                    <span class="label">${
+                      this.isEnglish ? "Skill Chance:" : "技能機率:"
+                    }</span>
                     <span class="value">${window.CharmCalculator.formatProbability(
                       details.skillProbability
                     )}</span>
                 </div>
                 <div class="breakdown-row">
-                    <span class="label">槽位機率:</span>
+                    <span class="label">${
+                      this.isEnglish ? "Slot Chance:" : "槽位機率:"
+                    }</span>
                     <span class="value">${window.CharmCalculator.formatProbability(
                       details.slotProbability
                     )}</span>
                 </div>
                 <div class="breakdown-row">
-                    <span class="label">組合數:</span>
+                    <span class="label">${
+                      this.isEnglish ? "Combinations:" : "組合數:"
+                    }</span>
                     <span class="value">${details.possibleCombinations}</span>
                 </div>
             </div>

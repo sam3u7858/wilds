@@ -1,0 +1,660 @@
+{
+  "skills": [
+    {
+      "id": "attack",
+      "nameZh": "攻擊",
+      "nameEn": "Attack Boost",
+      "color": "7a4645"
+    },
+    {
+      "id": "critical_eye",
+      "nameZh": "看破",
+      "nameEn": "Critical Eye",
+      "color": "564471"
+    },
+    {
+      "id": "fire_attack",
+      "nameZh": "火屬性攻擊強化",
+      "nameEn": "Fire Attack",
+      "color": "a99967"
+    },
+    {
+      "id": "water_attack",
+      "nameZh": "水屬性攻擊強化",
+      "nameEn": "Water Attack",
+      "color": "a99967"
+    },
+    {
+      "id": "thunder_attack",
+      "nameZh": "雷屬性攻擊強化",
+      "nameEn": "Thunder Attack",
+      "color": "a99967"
+    },
+    {
+      "id": "ice_attack",
+      "nameZh": "冰屬性攻擊強化",
+      "nameEn": "Ice Attack",
+      "color": "a99967"
+    },
+    {
+      "id": "dragon_attack",
+      "nameZh": "龍屬性攻擊強化",
+      "nameEn": "Dragon Attack",
+      "color": "a99967"
+    },
+    {
+      "id": "poison_attack",
+      "nameZh": "毒屬性強化",
+      "nameEn": "Poison Attack",
+      "color": "a99967"
+    },
+    {
+      "id": "sleep_attack",
+      "nameZh": "睡眠屬性強化",
+      "nameEn": "Sleep Attack",
+      "color": "a99967"
+    },
+    {
+      "id": "paralysis_attack",
+      "nameZh": "麻痺屬性強化",
+      "nameEn": "Paralysis Attack",
+      "color": "a99967"
+    },
+    {
+      "id": "blast_attack",
+      "nameZh": "爆破屬性強化",
+      "nameEn": "Blast Attack",
+      "color": "a99967"
+    },
+    {
+      "id": "critical_element",
+      "nameZh": "會心擊【屬性】",
+      "nameEn": "Critical Element",
+      "color": "564471"
+    },
+    {
+      "id": "critical_status",
+      "nameZh": "會心擊【特殊】",
+      "nameEn": "Critical Status",
+      "color": "564471"
+    },
+    {
+      "id": "critical_draw",
+      "nameZh": "拔刀術【技】",
+      "nameEn": "Critical Draw",
+      "color": "564471"
+    },
+    {
+      "id": "punishing_draw",
+      "nameZh": "拔刀術【力】",
+      "nameEn": "Punishing Draw",
+      "color": "564471"
+    },
+    {
+      "id": "guard",
+      "nameZh": "防禦性能",
+      "nameEn": "Guard",
+      "color": "a38b6f"
+    },
+    {
+      "id": "defense_boost",
+      "nameZh": "防禦強化",
+      "nameEn": "Defense Boost",
+      "color": "a38b6f"
+    },
+    {
+      "id": "offensive_guard",
+      "nameZh": "攻擊守勢",
+      "nameEn": "Offensive Guard",
+      "color": "a38b6f"
+    },
+    {
+      "id": "artillery",
+      "nameZh": "砲術",
+      "nameEn": "Artillery",
+      "color": "737a7f"
+    },
+    {
+      "id": "load_shells",
+      "nameZh": "砲彈裝填",
+      "nameEn": "Load Shells",
+      "color": "737a7f"
+    },
+    {
+      "id": "handicraft",
+      "nameZh": "匠",
+      "nameEn": "Handicraft",
+      "color": "857d4a"
+    },
+    {
+      "id": "razor_sharp",
+      "nameZh": "利刃",
+      "nameEn": "Razor Sharp",
+      "color": "857d4a"
+    },
+    {
+      "id": "protective_polish",
+      "nameZh": "剛刃研磨",
+      "nameEn": "Protective Polish",
+      "color": "857d4a"
+    },
+    {
+      "id": "minds_eye",
+      "nameZh": "心眼",
+      "nameEn": "Mind's Eye",
+      "color": "857d4a"
+    },
+    {
+      "id": "speed_sharpening",
+      "nameZh": "砥石使用高速化",
+      "nameEn": "Speed Sharpening",
+      "color": "857d4a"
+    },
+    { "id": "focus", "nameZh": "集中", "nameEn": "Focus", "color": "495780" },
+    {
+      "id": "charge_master",
+      "nameZh": "蓄力大師",
+      "nameEn": "Charge Master",
+      "color": "495780"
+    },
+    {
+      "id": "power_prolonger",
+      "nameZh": "強化持續",
+      "nameEn": "Power Prolonger",
+      "color": "495780"
+    },
+    {
+      "id": "slugger",
+      "nameZh": "KO術",
+      "nameEn": "Slugger",
+      "color": "7a4645"
+    },
+    {
+      "id": "stamina_thief",
+      "nameZh": "奪取耐力",
+      "nameEn": "Stamina Thief",
+      "color": "7a4645"
+    },
+    {
+      "id": "horn_maestro",
+      "nameZh": "吹笛名人",
+      "nameEn": "Horn Maestro",
+      "color": "495780"
+    },
+    {
+      "id": "special_ammo_boost",
+      "nameZh": "特殊射擊強化",
+      "nameEn": "Special Ammo Boost",
+      "color": "737a7f"
+    },
+    {
+      "id": "first_shot",
+      "nameZh": "首發射擊",
+      "nameEn": "First Shot",
+      "color": "737a7f"
+    },
+    {
+      "id": "fourth_shot",
+      "nameZh": "第四射擊",
+      "nameEn": "Fourth Shot",
+      "color": "737a7f"
+    },
+    {
+      "id": "ballistics",
+      "nameZh": "彈道強化",
+      "nameEn": "Ballistics",
+      "color": "737a7f"
+    },
+    {
+      "id": "rapid_morph",
+      "nameZh": "高速變形",
+      "nameEn": "Rapid Morph",
+      "color": "495780"
+    },
+    {
+      "id": "bludgeoner",
+      "nameZh": "鈍器能手",
+      "nameEn": "Bludgeoner",
+      "color": "7a4645"
+    },
+    {
+      "id": "exhaust_coating_plus",
+      "nameZh": "減氣瓶追加",
+      "nameEn": "Exhaust Coating Plus",
+      "color": "737a7f"
+    },
+    {
+      "id": "blast_coating_plus",
+      "nameZh": "爆破瓶追加",
+      "nameEn": "Blast Coating Plus",
+      "color": "737a7f"
+    },
+    {
+      "id": "poison_coating_plus",
+      "nameZh": "毒瓶追加",
+      "nameEn": "Poison Coating Plus",
+      "color": "737a7f"
+    },
+    {
+      "id": "airborne",
+      "nameZh": "飛燕",
+      "nameEn": "Airborne",
+      "color": "7a4645"
+    },
+    {
+      "id": "charge_attack_boost",
+      "nameZh": "蓄攻強化",
+      "nameEn": "Charge Attack Boost",
+      "color": "7a4645"
+    },
+    {
+      "id": "poison_damage_boost",
+      "nameZh": "毒傷害強化",
+      "nameEn": "Poison Damage Boost",
+      "color": "7a4645"
+    },
+    {
+      "id": "masters_touch",
+      "nameZh": "達人藝",
+      "nameEn": "Master's Touch",
+      "color": "857d4a"
+    },
+    {
+      "id": "paralysis_coating_plus",
+      "nameZh": "麻痺瓶追加",
+      "nameEn": "Paralysis Coating Plus",
+      "color": "737a7f"
+    },
+    {
+      "id": "sleep_coating_plus",
+      "nameZh": "睡眠瓶追加",
+      "nameEn": "Sleep Coating Plus",
+      "color": "737a7f"
+    },
+    {
+      "id": "rapid_fire_up",
+      "nameZh": "速射強化",
+      "nameEn": "Rapid Fire Up",
+      "color": "737a7f"
+    },
+    {
+      "id": "normal_shot_up",
+      "nameZh": "通常彈．通常箭強化",
+      "nameEn": "Normal/Rapid Up",
+      "color": "737a7f"
+    },
+    {
+      "id": "spread_shot_up",
+      "nameZh": "散彈．剛射強化",
+      "nameEn": "Spread Up",
+      "color": "737a7f"
+    },
+    {
+      "id": "pierce_shot_up",
+      "nameZh": "貫通彈．龍之箭強化",
+      "nameEn": "Pierce Up",
+      "color": "737a7f"
+    },
+    {
+      "id": "critical_boost",
+      "nameZh": "超會心",
+      "nameEn": "Critical Boost",
+      "color": "564471"
+    },
+    {
+      "id": "poison_resistance",
+      "nameZh": "毒耐性",
+      "nameEn": "Poison Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "sleep_resistance",
+      "nameZh": "睡眠耐性",
+      "nameEn": "Sleep Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "paralysis_resistance",
+      "nameZh": "麻痺耐性",
+      "nameEn": "Paralysis Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "blastblight_resistance",
+      "nameZh": "爆破異常耐性",
+      "nameEn": "Blast Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "stun_resistance",
+      "nameZh": "昏厥耐性",
+      "nameEn": "Stun Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "marathon_runner",
+      "nameZh": "跑者",
+      "nameEn": "Marathon Runner",
+      "color": "ceb459"
+    },
+    {
+      "id": "geologist",
+      "nameZh": "地質學",
+      "nameEn": "Geologist",
+      "color": "787042"
+    },
+    {
+      "id": "quick_sheathe",
+      "nameZh": "收刀術",
+      "nameEn": "Quick Sheathe",
+      "color": "495780"
+    },
+    {
+      "id": "item_prolonger",
+      "nameZh": "道具使用強化",
+      "nameEn": "Item Prolonger",
+      "color": "41726e"
+    },
+    {
+      "id": "bind_resistance",
+      "nameZh": "束縛耐性",
+      "nameEn": "Bind Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "free_meal",
+      "nameZh": "滿足感",
+      "nameEn": "Free Meal",
+      "color": "41726e"
+    },
+    {
+      "id": "flinch_free",
+      "nameZh": "減輕膽怯",
+      "nameEn": "Flinch Free",
+      "color": "a38b6f"
+    },
+    {
+      "id": "selfless_state",
+      "nameZh": "無我境界",
+      "nameEn": "Selfless State",
+      "color": "8b5760"
+    },
+    {
+      "id": "hunger_resistance",
+      "nameZh": "飢餓耐性",
+      "nameEn": "Hunger Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "bleeding_resistance",
+      "nameZh": "裂傷耐性",
+      "nameEn": "Bleeding Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "defense_down_resistance",
+      "nameZh": "防禦力下降耐性",
+      "nameEn": "Defense Down Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "stench_resistance",
+      "nameZh": "惡臭耐性",
+      "nameEn": "Stench Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "tremor_resistance",
+      "nameZh": "耐震",
+      "nameEn": "Tremor Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "constitution",
+      "nameZh": "體術",
+      "nameEn": "Constitution",
+      "color": "ceb459"
+    },
+    {
+      "id": "environmental_knowledge",
+      "nameZh": "環境利用知識",
+      "nameEn": "Environmental Knowledge",
+      "color": "787042"
+    },
+    {
+      "id": "bombardier",
+      "nameZh": "炸彈客",
+      "nameEn": "Bombardier",
+      "color": "7a4645"
+    },
+    {
+      "id": "divine_blessing",
+      "nameZh": "精靈加護",
+      "nameEn": "Divine Blessing",
+      "color": "a38b6f"
+    },
+    {
+      "id": "recovery_up",
+      "nameZh": "體力回復量上升",
+      "nameEn": "Recovery Up",
+      "color": "75b058"
+    },
+    {
+      "id": "recovery_speed",
+      "nameZh": "回復速度",
+      "nameEn": "Recovery Speed",
+      "color": "75b058"
+    },
+    {
+      "id": "speed_eating",
+      "nameZh": "快吃",
+      "nameEn": "Speed Eating",
+      "color": "41726e"
+    },
+    {
+      "id": "botanist",
+      "nameZh": "植生學",
+      "nameEn": "Botanist",
+      "color": "787042"
+    },
+    {
+      "id": "windproof",
+      "nameZh": "風壓耐性",
+      "nameEn": "Windproof",
+      "color": "a38b6f"
+    },
+    {
+      "id": "wide_range",
+      "nameZh": "廣域化",
+      "nameEn": "Wide-Range",
+      "color": "41726e"
+    },
+    {
+      "id": "intimidator",
+      "nameZh": "威嚇",
+      "nameEn": "Intimidator",
+      "color": "787042"
+    },
+    {
+      "id": "aquatic_expert",
+      "nameZh": "適應水域/油泥",
+      "nameEn": "Aquatic/Bog Expert",
+      "color": "a38b6f"
+    },
+    {
+      "id": "fire_resistance",
+      "nameZh": "火耐性",
+      "nameEn": "Fire Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "water_resistance",
+      "nameZh": "水耐性",
+      "nameEn": "Water Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "thunder_resistance",
+      "nameZh": "雷耐性",
+      "nameEn": "Thunder Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "ice_resistance",
+      "nameZh": "冰耐性",
+      "nameEn": "Ice Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "dragon_resistance",
+      "nameZh": "龍耐性",
+      "nameEn": "Dragon Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "environmental_resistance",
+      "nameZh": "適應環境",
+      "nameEn": "Environmental Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "earplugs",
+      "nameZh": "耳塞",
+      "nameEn": "Earplugs",
+      "color": "495780"
+    },
+    {
+      "id": "maintenance",
+      "nameZh": "整備",
+      "nameEn": "Maintenance",
+      "color": "857d4a"
+    },
+    {
+      "id": "mushroomancer",
+      "nameZh": "最愛菇類",
+      "nameEn": "Mushroomancer",
+      "color": "41726e"
+    },
+    {
+      "id": "peak_performance",
+      "nameZh": "無傷",
+      "nameEn": "Peak Performance",
+      "color": "8b5760"
+    },
+    {
+      "id": "evade_extender",
+      "nameZh": "迴避距離上升",
+      "nameEn": "Evade Extender",
+      "color": "495780"
+    },
+    {
+      "id": "resuscitate",
+      "nameZh": "轉禍為福",
+      "nameEn": "Resuscitate",
+      "color": "8b5760"
+    },
+    {
+      "id": "counterstrike",
+      "nameZh": "逆襲",
+      "nameEn": "Counterstrike",
+      "color": "8b5760"
+    },
+    {
+      "id": "heroics",
+      "nameZh": "火場怪力",
+      "nameEn": "Heroics",
+      "color": "8b5760"
+    },
+    {
+      "id": "maximum_might",
+      "nameZh": "精神抖擻",
+      "nameEn": "Maximum Might",
+      "color": "8b5760"
+    },
+    {
+      "id": "stamina_surge",
+      "nameZh": "耐力急速回復",
+      "nameEn": "Stamina Surge",
+      "color": "ceb459"
+    },
+    {
+      "id": "blight_resistance",
+      "nameZh": "屬性異常耐性",
+      "nameEn": "Blight Resistance",
+      "color": "a38b6f"
+    },
+    {
+      "id": "evade_window",
+      "nameZh": "迴避性能",
+      "nameEn": "Evade Window",
+      "color": "495780"
+    },
+    { "id": "ambush", "nameZh": "急襲", "nameEn": "Ambush", "color": "8b5760" },
+    {
+      "id": "partbreaker",
+      "nameZh": "破壞王",
+      "nameEn": "Partbreaker",
+      "color": "7a4645"
+    },
+    {
+      "id": "resentment",
+      "nameZh": "怨恨",
+      "nameEn": "Resentment",
+      "color": "8b5760"
+    },
+    {
+      "id": "agitator",
+      "nameZh": "挑戰者",
+      "nameEn": "Agitator",
+      "color": "8b5760"
+    },
+    {
+      "id": "weakness_exploit",
+      "nameZh": "弱點特效",
+      "nameEn": "Weakness Exploit",
+      "color": "564471"
+    },
+    {
+      "id": "latent_power",
+      "nameZh": "力量解放",
+      "nameEn": "Latent Power",
+      "color": "8b5760"
+    },
+    {
+      "id": "offense_boost",
+      "nameZh": "攻勢",
+      "nameEn": "Offense Boost",
+      "color": "7a4645"
+    },
+    {
+      "id": "chain_blade_stab",
+      "nameZh": "鎖刃刺擊",
+      "nameEn": "Chain Blade Stab",
+      "color": "7a4645"
+    },
+    {
+      "id": "element_absorption",
+      "nameZh": "屬性吸收",
+      "nameEn": "Element Absorption",
+      "color": "a99967"
+    },
+    {
+      "id": "element_conversion",
+      "nameZh": "屬性轉換",
+      "nameEn": "Element Conversion",
+      "color": "a99967"
+    },
+    {
+      "id": "chain_crit",
+      "nameZh": "連擊",
+      "nameEn": "Chain Crit",
+      "color": "564471"
+    },
+    {
+      "id": "sneak_attack",
+      "nameZh": "巧擊",
+      "nameEn": "Sneak Attack",
+      "color": "8b5760"
+    }
+  ]
+}

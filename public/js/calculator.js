@@ -326,15 +326,24 @@ class CharmCalculator {
     const hours = Math.floor((total % (60 * 24)) / 60);
     const minutes = total % 60;
 
+    const isEnglish = window.location.pathname.includes("/eng/");
     const parts = [];
-    if (days > 0) parts.push(`${days}天`);
-    if (hours > 0) parts.push(`${hours}小時`);
-    if (minutes > 0 || parts.length === 0) parts.push(`${minutes}分鐘`);
 
-    if (days > 0 && (hours > 0 || minutes > 0)) {
-      return `${parts[0]}又${parts.slice(1).join("")}`;
+    if (isEnglish) {
+      if (days > 0) parts.push(`${days} day${days > 1 ? "s" : ""}`);
+      if (hours > 0) parts.push(`${hours} hour${hours > 1 ? "s" : ""}`);
+      if (minutes > 0 || parts.length === 0)
+        parts.push(`${minutes} minute${minutes > 1 ? "s" : ""}`);
+      return parts.join(" ");
+    } else {
+      if (days > 0) parts.push(`${days}天`);
+      if (hours > 0) parts.push(`${hours}小時`);
+      if (minutes > 0 || parts.length === 0) parts.push(`${minutes}分鐘`);
+      if (days > 0 && (hours > 0 || minutes > 0)) {
+        return `${parts[0]}又${parts.slice(1).join("")}`;
+      }
+      return parts.join("");
     }
-    return parts.join("");
   }
 
   /**

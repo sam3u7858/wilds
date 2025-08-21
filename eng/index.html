@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>魔物獵人 Wilds 護石計算機 - 荒野計算機</title>
+    <title>Monster Hunter Wilds Charm Calculator - Wilds Calculator</title>
     <meta
       name="description"
-      content="專業的魔物獵人 Wilds 護石機率計算工具，精確計算技能組合和鑲嵌槽的獲得機率"
+      content="A professional Monster Hunter Wilds charm probability calculator for accurately calculating the odds of obtaining skill combinations and slots."
     />
-    <link rel="icon" href="./public/favicon.ico" />
+    <link rel="icon" href="../public/favicon.ico" />
 
     <!-- Preload critical fonts -->
     <link
       rel="preload"
-      href="./public/fonts/MantouSans-Regular.ttf"
+      href="../public/fonts/MantouSans-Regular.ttf"
       as="font"
       type="font/ttf"
       crossorigin
@@ -24,7 +24,7 @@
       /* Font Face Declarations */
       @font-face {
         font-family: "MantouSans";
-        src: url("./public/fonts/MantouSans-Regular.ttf") format("truetype");
+        src: url("../public/fonts/MantouSans-Regular.ttf") format("truetype");
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -194,7 +194,7 @@
     <!-- Loading overlay -->
     <div id="loadingOverlay" class="loading-overlay">
       <div class="loading-spinner"></div>
-      <div class="loading-text">載入護石計算器...</div>
+      <div class="loading-text">Loading Charm Calculator...</div>
     </div>
 
     <!-- Main application container -->
@@ -208,8 +208,8 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="./public/imgs/logo.png" alt="Logo" class="logo" />
-            <span class="brand-name">荒野計算機</span>
+            <img src="../public/imgs/logo.png" alt="Logo" class="logo" />
+            <span class="brand-name">Wilds Calculator</span>
           </a>
         </div>
 
@@ -234,7 +234,7 @@
                 fill="currentColor"
               />
             </svg>
-            護石計算機
+            Charm Calculator
           </button>
           <button class="nav-button" onclick="openYoutube()">
             <svg
@@ -261,7 +261,7 @@
                 stroke-width="2"
               />
             </svg>
-            YouTube 頻道
+            YouTube Channel
           </button>
           <button class="nav-button" onclick="openStar()">
             <svg
@@ -275,16 +275,16 @@
                 fill="currentColor"
               />
             </svg>
-            給我一顆星
+            Star on GitHub
           </button>
         </div>
 
         <div class="nav-right">
-          <a class="language-switch" href="./eng/index.html" style="color: white">EN</a>
+          <a class="language-switch" href="../index.html" style="color: white">中文</a>
           <div class="user-section">
             <div class="user-avatar" onclick="toggleUserDropdown()">
               <img
-                src="./public/imgs/user_icon.png"
+                src="../public/imgs/user_icon.png"
                 alt="User"
                 class="avatar"
               />
@@ -298,21 +298,21 @@
             >
               <div class="user-info-header">
                 <img
-                  src="./public/imgs/user_icon.png"
+                  src="../public/imgs/user_icon.png"
                   alt="User"
                   class="dropdown-avatar"
                 />
                 <div class="user-details">
                   <div class="user-name">lookingforbread2024</div>
-                  <div class="user-status">高級獵人</div>
+                  <div class="user-status">Master Hunter</div>
                 </div>
               </div>
               <div class="menu-separator"></div>
-              <div class="menu-item">個人檔案</div>
-              <div class="menu-item">設定</div>
-              <div class="menu-item">我的最愛</div>
+              <div class="menu-item">Profile</div>
+              <div class="menu-item">Settings</div>
+              <div class="menu-item">Favorites</div>
               <div class="menu-separator"></div>
-              <div class="menu-item">登出</div>
+              <div class="menu-item">Logout</div>
             </div>
           </div>
         </div>
@@ -321,7 +321,7 @@
       <!-- Main Content -->
       <main class="main-content">
         <div class="main-grid">
-          <h1 class="page-title">條件設定</h1>
+          <h1 class="page-title">Criteria Setup</h1>
           <div class="content-grid">
             <!-- Left Panel -->
             <div class="left-panel">
@@ -331,18 +331,18 @@
                   <!-- Left side: Charm info and price -->
                   <div class="conditions-left">
                     <div class="charm-display">
-                      <h3 class="charm-title">發光護石</h3>
+                      <h3 class="charm-title">Glowing Charm</h3>
                       <div class="charm-image-container">
                         <img
-                          src="./public/imgs/stone_template.png"
-                          alt="護石"
+                          src="../public/imgs/stone_template.png"
+                          alt="Charm"
                           class="charm-image"
                         />
                       </div>
                     </div>
                     <div class="price-container">
                       <div class="price-tag">
-                        <span class="price-label">金額</span>
+                        <span class="price-label">Price</span>
                         <span class="price-value">30000z</span>
                       </div>
                     </div>
@@ -352,21 +352,21 @@
                   <div class="conditions-right">
                     <!-- Equipment Details -->
                     <div class="equipment-section">
-                      <h3 class="subsection-title">詳細資料</h3>
+                      <h3 class="subsection-title">Details</h3>
                       <div class="equipment-info">
                         <div class="charm-header">
                           <div class="charm-name">
                             <img
-                              src="./public/imgs/placeholder_icon.png"
-                              alt="護石圖標"
+                              src="../public/imgs/placeholder_icon.png"
+                              alt="Charm Icon"
                               class="charm-icon"
                             />
-                            <span class="charm-text">發光護石</span>
+                            <span class="charm-text">Glowing Charm</span>
                           </div>
                           <div class="charm-level">Lv1</div>
                         </div>
                         <div class="charm-slots">
-                          <span class="slots-label">鑲嵌槽</span>
+                          <span class="slots-label">Slots</span>
                           <div class="slot-indicators" id="charmSlots">
                             <!-- Slots will be dynamically generated -->
                           </div>
@@ -376,7 +376,7 @@
 
                     <!-- Skills List -->
                     <div class="skills-section">
-                      <h3 class="subsection-title">裝備技能</h3>
+                      <h3 class="subsection-title">Equipment Skills</h3>
                       <div class="skills-list" id="selectedSkillsList">
                         <!-- Selected skills will be rendered here -->
                         <div class="add-skill-button">
@@ -398,12 +398,12 @@
             <div class="right-panel">
               <!-- Calculation Results -->
               <div class="results-section">
-                <h2 class="section-title">計算結果</h2>
+                <h2 class="section-title">Calculation Results</h2>
                 <div class="results-content" id="resultsContent">
                   <!-- Results will be rendered here -->
                   <div class="empty-state">
                     <div class="empty-text">
-                      請選擇技能或設定鑲嵌槽來開始計算
+                      Please select skills or set slots to start calculation.
                     </div>
                   </div>
                 </div>
@@ -411,21 +411,25 @@
 
               <!-- Data Analysis Chart -->
               <div class="analysis-section">
-                <h2 class="section-title">詳細數據分析</h2>
+                <h2 class="section-title">Detailed Data Analysis</h2>
                 <div class="chart-description">
                   <div class="description-title">
-                    護石獲得時間分布圖（常態分布）
+                    Charm Acquisition Time Distribution (Normal Distribution)
                   </div>
                   <div class="description-content">
-                    這張圖表顯示了在不同時間點獲得目標護石的機率密度分布。<br />
-                    <strong>橫軸（時間）：</strong
-                    >代表持續鑑定護石的累積時間<br />
-                    <strong>縱軸（機率密度）：</strong
-                    >數值越高表示在該時間點附近獲得護石的可能性越大<br />
-                    <strong>曲線峰值：</strong
-                    >最可能獲得護石的時間點，約50%的機率會在此時間前後獲得<br />
-                    <strong>曲線下面積：</strong
-                    >代表總機率100%，面積越大的區間表示獲得護石的可能性越高
+                    This chart shows the probability density distribution of
+                    acquiring the target charm at different points in time.<br />
+                    <strong>X-Axis (Time):</strong>
+                    Cumulative time spent appraising charms.<br />
+                    <strong>Y-Axis (Probability Density):</strong>
+                    Higher values indicate a greater likelihood of acquiring the
+                    charm around that time point.<br />
+                    <strong>Peak of the Curve:</strong>
+                    The most likely point in time to acquire the charm; there's
+                    about a 50% chance of getting it around this time.<br />
+                    <strong>Area Under Curve:</strong>
+                    Represents the total probability of 100%; a larger area in a
+                    given interval means a higher chance of acquisition.
                   </div>
                 </div>
                 <div class="chart-container">
@@ -456,28 +460,28 @@
           <div class="footer-main">
             <div class="footer-info">
               <p class="thanks-text">
-                特別感謝 YouTube
+                Special thanks to YouTuber
                 <a
                   href="https://www.youtube.com/@calicolulun"
                   target="_blank"
                   class="thanks-link"
                   >月光光大大</a
                 >
-                整理的詳細護石數據表格
+                for compiling the detailed charm data tables.
               </p>
               <div class="data-sources">
                 <a
                   href="https://www.youtube.com/watch?v=Mu9csBe3w-Y"
                   target="_blank"
                   class="data-link"
-                  >護石機制解說影片</a
+                  >Charm Mechanics Video</a
                 >
                 ·
                 <a
                   href="https://docs.google.com/spreadsheets/d/1nL4GrZ2gMc5yb5zfwctMpxncRQmQ4JTl-zjvzHHxkzQ/edit"
                   target="_blank"
                   class="data-link"
-                  >護石數據資料表</a
+                  >Charm Data Sheet</a
                 >
               </div>
             </div>
@@ -493,7 +497,7 @@
                 href="https://github.com/sam3u7858/wilds/issues"
                 target="_blank"
                 class="contact-link"
-                >BUG 回報</a
+                >Report a BUG</a
               >
               ·
               <a
@@ -513,19 +517,22 @@
           </div>
           <div class="footer-disclaimer">
             <p class="disclaimer-text">
-              免責聲明：本計算器僅供參考，計算結果基於社群整理資料。實際遊戲結果可能因版本更新等因素而有所差異。
-              本工具不隸屬於 CAPCOM 公司，「魔物獵人」為 CAPCOM
-              的註冊商標。使用本計算器產生的任何損失，開發者概不負責。
+              Disclaimer: This calculator is for reference only. Results are
+              based on community-compiled data. Actual in-game results may vary
+              due to updates and other factors. This tool is not affiliated with
+              CAPCOM. "Monster Hunter" is a registered trademark of CAPCOM. The
+              developer is not responsible for any losses incurred from using
+              this calculator.
             </p>
           </div>
           <div class="footer-bottom">
             <p class="copyright">
-              © 2025 荒野計算機 | 數據來源：
+              © 2025 Wilds Calculator | Data Source:
               <a
                 href="https://docs.google.com/spreadsheets/d/1nL4GrZ2gMc5yb5zfwctMpxncRQmQ4JTl-zjvzHHxkzQ/edit"
                 target="_blank"
                 class="data-source"
-                >月光光大大整理表格</a
+                >Table organized by Youtuber 月光光</a
               >
             </p>
           </div>
@@ -542,7 +549,7 @@
     >
       <div class="modal-content" onclick="event.stopPropagation()">
         <div class="modal-header">
-          <h2>選擇技能</h2>
+          <h2>Select Skill</h2>
           <button onclick="hideSkillSelector()" class="close-button">×</button>
         </div>
         <div class="modal-body">
@@ -552,7 +559,7 @@
               <input
                 id="skillSearch"
                 type="text"
-                placeholder="搜尋技能..."
+                placeholder="Search skills..."
                 class="search-input"
                 oninput="filterSkills()"
               />
@@ -581,7 +588,7 @@
     >
       <div class="modal-content share-modal" onclick="event.stopPropagation()">
         <div class="modal-header">
-          <h2>分享計算結果</h2>
+          <h2>Share Results</h2>
           <button onclick="hideShareModal()" class="close-button">×</button>
         </div>
         <div class="modal-body">
@@ -601,7 +608,7 @@
                   stroke-linejoin="round"
                 />
               </svg>
-              儲存為圖片
+              Save as Image
             </button>
             <button class="share-option" onclick="copyResultText()">
               <svg
@@ -615,7 +622,7 @@
                   fill="currentColor"
                 />
               </svg>
-              複製文字結果
+              Copy as Text
             </button>
           </div>
           <div
@@ -628,14 +635,14 @@
     </div>
 
     <!-- Load main stylesheet -->
-    <link rel="stylesheet" href="./public/css/main.css" />
+    <link rel="stylesheet" href="../public/css/main.css" />
 
     <!-- Load JavaScript modules -->
-    <script src="./public/js/data.js"></script>
-    <script src="./public/js/calculator.js"></script>
-    <script src="./public/js/suggestion.js"></script>
-    <script src="./public/js/ui.js"></script>
-    <script src="./public/js/image_exporter.js"></script>
-    <script src="./public/js/app.js"></script>
+    <script src="../public/js/data.js"></script>
+    <script src="../public/js/calculator.js"></script>
+    <script src="../public/js/suggestion.js"></script>
+    <script src="../public/js/ui.js"></script>
+    <script src="../public/js/image_exporter.js"></script>
+    <script src="../public/js/app.js"></script>
   </body>
 </html>

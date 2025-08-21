@@ -218,12 +218,12 @@ class CharmSuggestion {
     ]);
 
     if (newSkillRecommendedLevel > -1) {
+      const originalSkillData = this.dataManager.getSkillById(originalSkill.id);
       return {
         adjustment: true,
         originalSkillId: originalSkill.id,
-        originalSkillName:
-          this.dataManager.getSkillById(originalSkill.id)?.nameZh ||
-          originalSkill.id,
+        originalSkillName: originalSkillData?.nameZh || originalSkill.id,
+        originalSkillNameEn: originalSkillData?.nameEn || originalSkill.id,
         newLevel: adjustedOriginalLevel,
         newSkillLevel: newSkillRecommendedLevel,
       };
