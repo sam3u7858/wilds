@@ -66,6 +66,29 @@
         z-index: 9999;
       }
 
+      /* Chart Tooltip */
+      .chart-tooltip {
+        position: fixed;
+        background: rgba(30, 30, 30, 0.9);
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        font-size: 14px;
+        pointer-events: none; /* Important to prevent tooltip from interfering with mouse events on canvas */
+        z-index: 1010;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        transition: opacity 0.2s ease;
+      }
+      .tooltip-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #d9f20b;
+      }
+      .tooltip-content {
+        color: #ddd;
+      }
+
       .loading-spinner {
         width: 40px;
         height: 40px;
@@ -88,6 +111,82 @@
         margin-left: 20px;
         color: #d9f20b;
         font-size: 18px;
+      }
+
+      /* Style for skill cards that can be selected if another skill's level is adjusted */
+      .skill-card.adjustment-candidate {
+        border-color: #ffd700; /* gold */
+        box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+      }
+
+      /* Style for the selected skill item that was just auto-adjusted */
+      .skill-item.adjusted {
+        background-color: rgba(255, 215, 0, 0.15);
+        border-radius: 8px;
+        transition: background-color 0.5s ease;
+      }
+
+      /* User Dropdown Menu */
+      .user-menu-dropdown {
+        position: absolute;
+        top: 65px;
+        right: 20px;
+        width: 260px;
+        background: #1f1f1f;
+        border: 1px solid #333;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        padding: 12px;
+        z-index: 1000;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        overflow: hidden;
+      }
+      .user-menu-dropdown.menu-animated {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .user-info-header {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+      }
+      .dropdown-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        margin-right: 12px;
+        border: 2px solid #444;
+      }
+      .user-details {
+        line-height: 1.3;
+      }
+      .user-name {
+        font-weight: bold;
+        font-size: 16px;
+        color: #fff;
+      }
+      .user-status {
+        font-size: 13px;
+        color: #aaa;
+      }
+      .menu-separator {
+        height: 1px;
+        background: #333;
+        margin: 12px 0;
+      }
+      .menu-item {
+        padding: 12px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        color: #ddd;
+        transition: background-color 0.2s ease;
+      }
+      .menu-item:hover {
+        background-color: #333;
+        color: #fff;
       }
     </style>
   </head>
@@ -192,6 +291,29 @@
               <div class="avatar-status-ring"></div>
             </div>
             <!-- User dropdown will be added here -->
+            <div
+              id="userDropdownMenu"
+              class="user-menu-dropdown"
+              style="display: none"
+            >
+              <div class="user-info-header">
+                <img
+                  src="./public/imgs/user_icon.png"
+                  alt="User"
+                  class="dropdown-avatar"
+                />
+                <div class="user-details">
+                  <div class="user-name">lookingforbread2024</div>
+                  <div class="user-status">高級獵人</div>
+                </div>
+              </div>
+              <div class="menu-separator"></div>
+              <div class="menu-item">個人檔案</div>
+              <div class="menu-item">設定</div>
+              <div class="menu-item">我的最愛</div>
+              <div class="menu-separator"></div>
+              <div class="menu-item">登出</div>
+            </div>
           </div>
         </div>
       </nav>
@@ -513,6 +635,7 @@
     <script src="./public/js/calculator.js"></script>
     <script src="./public/js/suggestion.js"></script>
     <script src="./public/js/ui.js"></script>
+    <script src="./public/js/image_exporter.js"></script>
     <script src="./public/js/app.js"></script>
   </body>
 </html>

@@ -17,7 +17,9 @@ class CharmSuggestion {
     if (!rarities) return 1;
 
     // 獲取當前已選技能（排除正在考慮的技能）
-    const currentSkills = selectedSkills.filter((skill) => skill.id !== skillId);
+    const currentSkills = selectedSkills.filter(
+      (skill) => skill.id !== skillId
+    );
 
     if (currentSkills.length === 0) {
       return this.dataManager.getMaxSkillLevel(skillId);
@@ -173,6 +175,64 @@ class CharmSuggestion {
   }
 
   /**
+   * Checks if lowering the level of an already selected skill can make a new skill compatible.
+   * This is triggered when one skill is already selected and the user hovers/selects a second one.
+   * @param {string} newSkillId - The ID of the skill to be added.
+   * @param {Array} selectedSkills - The list of currently selected skills. Should contain exactly one skill.
+   * @returns {object} An object with suggestion details or adjustment: false.
+   */
+  findLevelAdjustmentSuggestion(newSkillId, selectedSkills) {
+    if (selectedSkills.length !== 1) {
+      return { adjustment: false };
+    }
+
+    const originalSkill = selectedSkills[0];
+
+    // First, check if it's compatible without any adjustments
+    const recommendedLevel = this.getBestCompatibleLevel(
+      newSkillId,
+      selectedSkills
+    );
+    if (recommendedLevel > -1) {
+      return { adjustment: false };
+    }
+
+    // If not compatible, try lowering the original skill's level by one RANK
+    const availableLevels = this.dataManager
+      .getAvailableSkillLevels(originalSkill.id)
+      .sort((a, b) => a - b);
+    const currentLevelIndex = availableLevels.indexOf(originalSkill.level);
+
+    if (currentLevelIndex <= 0) {
+      return { adjustment: false }; // Already at the lowest level or level not found
+    }
+
+    const adjustedOriginalLevel = availableLevels[currentLevelIndex - 1];
+    const adjustedOriginalSkill = {
+      ...originalSkill,
+      level: adjustedOriginalLevel,
+    };
+
+    const newSkillRecommendedLevel = this.getBestCompatibleLevel(newSkillId, [
+      adjustedOriginalSkill,
+    ]);
+
+    if (newSkillRecommendedLevel > -1) {
+      return {
+        adjustment: true,
+        originalSkillId: originalSkill.id,
+        originalSkillName:
+          this.dataManager.getSkillById(originalSkill.id)?.nameZh ||
+          originalSkill.id,
+        newLevel: adjustedOriginalLevel,
+        newSkillLevel: newSkillRecommendedLevel,
+      };
+    }
+
+    return { adjustment: false };
+  }
+
+  /**
    * 分析計算失敗原因
    * @param {object} criteria - 使用者設定的計算條件
    * @returns {object} 包含原因和建議的分析結果
@@ -192,7 +252,8 @@ class CharmSuggestion {
     criteria.targetSkills.forEach((targetSkill) => {
       const maxLevel = this.dataManager.getMaxSkillLevel(targetSkill.skillId);
       if (targetSkill.level > maxLevel) {
-        const skillName = skillMap.get(targetSkill.skillId)?.nameZh || targetSkill.skillId;
+        const skillName =
+          skillMap.get(targetSkill.skillId)?.nameZh || targetSkill.skillId;
         analysis.reasons.push(
           `技能 ${skillName} 的等級 ${targetSkill.level} 超過遊戲中最大等級 ${maxLevel}。`
         );
@@ -203,7 +264,9 @@ class CharmSuggestion {
     });
 
     // 2. 檢查整體模板相容性
-    const isCombinationPossible = this.checkTemplateCompatibility(criteria.targetSkills);
+    const isCombinationPossible = this.checkTemplateCompatibility(
+      criteria.targetSkills
+    );
 
     if (!isCombinationPossible && criteria.targetSkills.length > 0) {
       analysis.reasons.push("您選擇的技能組合在任何已知的護石模板中都不存在。");
@@ -212,7 +275,8 @@ class CharmSuggestion {
       // 建議1: 單獨尋找技能
       if (criteria.targetSkills.length > 1) {
         criteria.targetSkills.forEach((skill) => {
-          const skillName = skillMap.get(skill.skillId)?.nameZh || skill.skillId;
+          const skillName =
+            skillMap.get(skill.skillId)?.nameZh || skill.skillId;
           analysis.suggestions.push(
             ` • 單獨尋找包含 ${skillName} Lv.${skill.level} 的護石。`
           );
@@ -221,14 +285,20 @@ class CharmSuggestion {
 
       // 建議2: 嘗試降低技能等級
       criteria.targetSkills.forEach((targetSkill) => {
-        const skillName = skillMap.get(targetSkill.skillId)?.nameZh || targetSkill.skillId;
+        const skillName =
+          skillMap.get(targetSkill.skillId)?.nameZh || targetSkill.skillId;
         const currentLevel = targetSkill.level;
-        
+
         // 嘗試從-1等級開始找到一個可行的組合
         for (let level = currentLevel - 1; level >= 1; level--) {
-          const otherSkills = criteria.targetSkills.filter(s => s.skillId !== targetSkill.skillId);
-          const testSkills = [...otherSkills, { skillId: targetSkill.skillId, level: level }];
-          
+          const otherSkills = criteria.targetSkills.filter(
+            (s) => s.skillId !== targetSkill.skillId
+          );
+          const testSkills = [
+            ...otherSkills,
+            { skillId: targetSkill.skillId, level: level },
+          ];
+
           if (this.checkTemplateCompatibility(testSkills)) {
             analysis.suggestions.push(
               ` • 嘗試將 ${skillName} 的等級降低到 Lv.${level}。`
@@ -238,7 +308,7 @@ class CharmSuggestion {
         }
       });
     }
-    
+
     // 如果有原因但沒有建議，給一個通用建議
     if (analysis.reasons.length > 0 && analysis.suggestions.length === 0) {
       analysis.suggestions.push("請嘗試調整技能組合或降低技能等級。");

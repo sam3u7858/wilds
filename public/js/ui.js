@@ -13,6 +13,8 @@ class CharmUI {
     this.failureAnalysis = null;
     this.showFailureDetails = false;
     this.skillHoverLevels = {};
+    this.showUserMenu = false;
+    this.userMenuAnimation = false;
 
     // 技能選擇器狀態
     this.skillCategories = [
@@ -80,7 +82,15 @@ class CharmUI {
 
     // 文檔點擊事件（關閉下拉菜單等）
     document.addEventListener("click", (e) => {
-      // 可以在這裡處理全域點擊事件
+      // Close user dropdown if clicked outside
+      if (this.showUserMenu) {
+        const avatar = e.target.closest(".user-avatar");
+        const menu = e.target.closest(".user-menu-dropdown");
+
+        if (!avatar && !menu) {
+          this.toggleUserMenu();
+        }
+      }
     });
   }
 
@@ -215,6 +225,19 @@ class CharmUI {
     card.className = "skill-card";
     card.onclick = () => this.selectSkill(skill);
 
+    let levelInfoStyle = ""; // Variable for inline style
+
+    if (this.selectedSkills.length === 1 && !this.isSkillSelected(skill.id)) {
+      const suggestion = window.CharmSuggestion.findLevelAdjustmentSuggestion(
+        skill.id,
+        this.selectedSkills
+      );
+      if (suggestion.adjustment) {
+        card.classList.add("adjustment-candidate");
+        levelInfoStyle = 'style="color: #ffd700;"'; // Apply yellow color directly
+      }
+    }
+
     if (isSelected) {
       card.classList.add("selected");
     }
@@ -230,7 +253,7 @@ class CharmUI {
     }" class="skill-icon" />
             <div class="skill-info">
                 <span class="skill-name">${skill.nameZh}</span>
-                <span class="skill-level-info">${recommendationText}</span>
+                <span class="skill-level-info" ${levelInfoStyle}>${recommendationText}</span>
             </div>
             <div class="available-levels">
                 ${availableLevels
@@ -260,15 +283,32 @@ class CharmUI {
     if (this.selectedSkills.length >= 3) return false;
 
     // Use the new suggestion logic for a precise check
-    return window.CharmSuggestion.getBestCompatibleLevel(skillId, currentSkills) !== -1;
+    return (
+      window.CharmSuggestion.getBestCompatibleLevel(skillId, currentSkills) !==
+      -1
+    );
   }
 
   /**
    * 獲取推薦文字
    */
   getRecommendationText(skillId) {
+    // New logic for level adjustment suggestion
+    if (this.selectedSkills.length === 1 && !this.isSkillSelected(skillId)) {
+      const suggestion = window.CharmSuggestion.findLevelAdjustmentSuggestion(
+        skillId,
+        this.selectedSkills
+      );
+      if (suggestion.adjustment) {
+        return `可選，但需調整 ${suggestion.originalSkillName}`;
+      }
+    }
+
     const maxLevel = window.CharmData.getMaxSkillLevel(skillId);
-    const recommendedLevel = window.CharmSuggestion.getRecommendedLevel(skillId, this.selectedSkills);
+    const recommendedLevel = window.CharmSuggestion.getRecommendedLevel(
+      skillId,
+      this.selectedSkills
+    );
     const currentSkills = this.selectedSkills.filter(
       (skill) => skill.id !== skillId
     );
@@ -299,12 +339,45 @@ class CharmUI {
       return;
     }
 
+    // New logic to handle level adjustment on selecting a second skill
+    if (this.selectedSkills.length === 1) {
+      const suggestion = window.CharmSuggestion.findLevelAdjustmentSuggestion(
+        skill.id,
+        this.selectedSkills
+      );
+      if (suggestion.adjustment) {
+        const originalSkill = this.selectedSkills.find(
+          (s) => s.id === suggestion.originalSkillId
+        );
+        if (originalSkill) {
+          originalSkill.level = suggestion.newLevel;
+          originalSkill.justAdjusted = true; // Flag for highlighting
+        }
+
+        const newSkillWithLevel = { ...skill, level: suggestion.newSkillLevel };
+        this.selectedSkills.push(newSkillWithLevel);
+
+        this.showMessage(
+          `為符合組合，已自動將 ${suggestion.originalSkillName} 降為 Lv.${suggestion.newLevel}`,
+          "info"
+        );
+
+        this.renderSelectedSkills();
+        this.performCalculation();
+        this.hideSkillSelector();
+        return; // Exit function after handling adjustment
+      }
+    }
+
     const isCompatible = this.isSkillCompatible(skill.id);
     let level;
 
     if (isCompatible) {
       // Use recommended level for compatible skills
-      level = window.CharmSuggestion.getRecommendedLevel(skill.id, this.selectedSkills);
+      level = window.CharmSuggestion.getRecommendedLevel(
+        skill.id,
+        this.selectedSkills
+      );
     } else {
       // For incompatible skills, use max level to allow user to create an invalid combo for later analysis
       level = window.CharmData.getMaxSkillLevel(skill.id);
@@ -409,6 +482,16 @@ class CharmUI {
 
     const item = document.createElement("div");
     item.className = "skill-item";
+
+    // Add highlight class if the skill was just adjusted
+    if (skill.justAdjusted) {
+      item.classList.add("adjusted");
+      // Remove the flag and the class after a short delay to create a flash effect
+      setTimeout(() => {
+        item.classList.remove("adjusted");
+        delete skill.justAdjusted;
+      }, 2000);
+    }
 
     item.innerHTML = `
             <img src="./public/imgs/${skill.color}.png" alt="${
@@ -888,6 +971,23 @@ class CharmUI {
       });
     }
 
+    // Calculate cumulative probability using the trapezoidal rule
+    let cumulativeArea = 0;
+    for (let i = 1; i < points.length; i++) {
+      const dx = points[i].time - points[i - 1].time;
+      const avgHeight = (points[i].probability + points[i - 1].probability) / 2;
+      cumulativeArea += dx * avgHeight;
+      points[i].cumulativeArea = cumulativeArea;
+    }
+
+    // Normalize cumulative probability
+    if (cumulativeArea > 0) {
+      for (let point of points) {
+        point.cumulativeProbability =
+          (point.cumulativeArea || 0) / cumulativeArea;
+      }
+    }
+
     return points;
   }
 
@@ -1006,6 +1106,55 @@ class CharmUI {
 
     // 繪製坐標軸
     this.drawTimeAxes(ctx, chartWidth, chartHeight, padding, minTime, maxTime);
+
+    // Draw hover line if applicable
+    if (this.chartHoverX >= 0) {
+      this.drawHoverLine(
+        ctx,
+        chartWidth,
+        chartHeight,
+        padding,
+        minTime,
+        maxTime,
+        maxProbability
+      );
+    }
+  }
+
+  drawHoverLine(
+    ctx,
+    chartWidth,
+    chartHeight,
+    padding,
+    minTime,
+    maxTime,
+    maxProbability
+  ) {
+    const dataPoint = this.getDataPointAtPosition(this.chartHoverX);
+    if (!dataPoint) return;
+
+    const x =
+      padding + ((dataPoint.time - minTime) / (maxTime - minTime)) * chartWidth;
+    const y =
+      padding +
+      chartHeight -
+      (dataPoint.probability / maxProbability) * chartHeight;
+
+    // Draw vertical dashed line
+    ctx.beginPath();
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = "#d9f20b";
+    ctx.lineWidth = 1;
+    ctx.moveTo(x, padding);
+    ctx.lineTo(x, padding + chartHeight);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Draw circle on the curve
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, 2 * Math.PI);
+    ctx.fillStyle = "#d9f20b";
+    ctx.fill();
   }
 
   drawTimeAxes(ctx, chartWidth, chartHeight, padding, minTime, maxTime) {
@@ -1065,18 +1214,108 @@ class CharmUI {
   }
 
   onChartMouseMove(event) {
-    // 圖表滑鼠移動事件處理
-    // 可以實現工具提示等功能
+    if (!this.chartCanvas) return;
+    const rect = this.chartCanvas.getBoundingClientRect();
+    // Scale mouse X to canvas's internal coordinate system to handle CSS scaling
+    const x =
+      (event.clientX - rect.left) * (this.chartCanvas.width / rect.width);
+
+    this.chartHoverX = x;
+    const dataPoint = this.getDataPointAtPosition(x);
+
+    if (dataPoint) {
+      this.updateTooltip(event, dataPoint);
+    } else {
+      this.hideTooltip();
+    }
+
+    // Trigger redraw
+    const ctx = this.chartCanvas.getContext("2d");
+    if (ctx) {
+      this.drawChart(ctx);
+    }
   }
 
   onChartMouseLeave() {
-    // 圖表滑鼠離開事件處理
     this.chartHoverX = -1;
+    this.hideTooltip();
     if (this.chartCanvas) {
       const ctx = this.chartCanvas.getContext("2d");
       if (ctx) {
         this.drawChart(ctx);
       }
+    }
+  }
+
+  getDataPointAtPosition(canvasX) {
+    if (!this.chartData || this.chartData.length === 0) return null;
+
+    const padding = 60;
+    const chartWidth = this.chartCanvas.width - 2 * padding;
+    const minTime = this.chartData[0].time;
+    const maxTime = this.chartData[this.chartData.length - 1].time;
+
+    const timeRatio = (canvasX - padding) / chartWidth;
+    const targetTime = minTime + timeRatio * (maxTime - minTime);
+
+    // Find the closest data point
+    let closestPoint = this.chartData[0];
+    for (let i = 1; i < this.chartData.length; i++) {
+      if (
+        Math.abs(this.chartData[i].time - targetTime) <
+        Math.abs(closestPoint.time - targetTime)
+      ) {
+        closestPoint = this.chartData[i];
+      }
+    }
+    return closestPoint;
+  }
+
+  updateTooltip(event, dataPoint) {
+    const tooltip = document.getElementById("chartTooltip");
+    if (!tooltip) return;
+
+    const titleEl = tooltip.querySelector(".tooltip-title");
+    const contentEl = tooltip.querySelector(".tooltip-content");
+
+    if (titleEl) titleEl.textContent = `時間: ${dataPoint.timeLabel}`;
+    if (contentEl)
+      contentEl.textContent = `累積機率: ${(
+        dataPoint.cumulativeProbability * 100
+      ).toFixed(2)}%`;
+
+    tooltip.style.display = "block";
+    tooltip.style.left = `${event.clientX + 15}px`;
+    tooltip.style.top = `${event.clientY - 40}px`;
+  }
+
+  hideTooltip() {
+    const tooltip = document.getElementById("chartTooltip");
+    if (tooltip) {
+      tooltip.style.display = "none";
+    }
+  }
+
+  toggleUserMenu() {
+    const menu = document.getElementById("userDropdownMenu");
+    if (!menu) return;
+
+    if (this.showUserMenu) {
+      // Hide menu logic
+      this.userMenuAnimation = false;
+      menu.classList.remove("menu-animated");
+      setTimeout(() => {
+        this.showUserMenu = false;
+        menu.style.display = "none";
+      }, 300); // Wait for animation to finish
+    } else {
+      // Show menu logic
+      this.showUserMenu = true;
+      menu.style.display = "block";
+      setTimeout(() => {
+        this.userMenuAnimation = true;
+        menu.classList.add("menu-animated");
+      }, 50); // Short delay to allow DOM to update before animation
     }
   }
 }
@@ -1121,8 +1360,38 @@ window.hideShareModal = function (event) {
   }
 };
 
-window.saveAsImage = function () {
-  charmUI.showMessage("圖片儲存功能開發中...", "info");
+window.saveAsImage = async function () {
+  const shareMessageEl = document.getElementById("shareMessage");
+  const showShareMessage = (message, type = "info") => {
+    if (shareMessageEl) {
+      shareMessageEl.textContent = message;
+      shareMessageEl.className = `share-message ${type}`;
+      shareMessageEl.style.display = "block";
+    }
+  };
+
+  if (!charmUI.timeEstimation || charmUI.selectedSkills.length === 0) {
+    showShareMessage("沒有可供分享的計算結果", "error");
+    return;
+  }
+
+  showShareMessage("正在產生圖片，請稍候...", "info");
+
+  try {
+    await window.CharmImageExporter.saveAsImage({
+      timeEstimation: charmUI.timeEstimation,
+      selectedSkills: charmUI.selectedSkills,
+      charmSlots: charmUI.charmSlots,
+    });
+    // The download is triggered inside, so no success message is needed here, as the browser handles it.
+    // We can hide the modal or the message.
+    setTimeout(() => {
+      if (shareMessageEl) shareMessageEl.style.display = "none";
+    }, 1000);
+  } catch (error) {
+    console.error("Error saving image:", error);
+    showShareMessage("儲存圖片失敗，請檢查主控台錯誤", "error");
+  }
 };
 
 window.copyResultText = function () {
@@ -1147,5 +1416,5 @@ window.openStar = function () {
 
 window.toggleUserDropdown = function () {
   // 用戶下拉菜單功能
-  console.log("用戶下拉菜單功能開發中...");
+  window.charmUI.toggleUserMenu();
 };
