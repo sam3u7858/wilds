@@ -225,7 +225,7 @@ class CharmUI {
     const recommendationText = this.getRecommendationText(skill.id);
 
     card.innerHTML = `
-            <img src="./imgs/${skill.color}.png" alt="${
+            <img src="./public/imgs/${skill.color}.png" alt="${
       skill.nameZh
     }" class="skill-icon" />
             <div class="skill-info">
@@ -253,17 +253,14 @@ class CharmUI {
    * 檢查技能是否相容
    */
   isSkillCompatible(skillId) {
-    // 如果沒有選擇其他技能，所有技能都相容
-    if (this.selectedSkills.length === 0) return true;
-
-    // 如果已經超過3個技能，不相容
+    const currentSkills = this.selectedSkills.filter(
+      (skill) => skill.id !== skillId
+    );
+    if (currentSkills.length === 0) return true;
     if (this.selectedSkills.length >= 3) return false;
 
-    // 如果技能已選擇，相容
-    if (this.isSkillSelected(skillId)) return true;
-
-    // 簡化相容性檢查 - 在實際應用中可以更複雜
-    return true;
+    // Use the new suggestion logic for a precise check
+    return window.CharmSuggestion.getBestCompatibleLevel(skillId, currentSkills) !== -1;
   }
 
   /**
@@ -271,17 +268,24 @@ class CharmUI {
    */
   getRecommendationText(skillId) {
     const maxLevel = window.CharmData.getMaxSkillLevel(skillId);
-    const isCompatible = this.isSkillCompatible(skillId);
+    const recommendedLevel = window.CharmSuggestion.getRecommendedLevel(skillId, this.selectedSkills);
+    const currentSkills = this.selectedSkills.filter(
+      (skill) => skill.id !== skillId
+    );
 
-    if (!isCompatible) {
-      return "不相容";
-    }
-
-    if (this.selectedSkills.length === 0) {
+    if (currentSkills.length === 0) {
       return `最高 Lv.${maxLevel}`;
     }
 
-    return `推薦 Lv.${maxLevel}`;
+    if (recommendedLevel === -1) {
+      return `不相容`;
+    }
+
+    if (recommendedLevel === maxLevel) {
+      return `推薦 Lv.${recommendedLevel} (相容)`;
+    } else {
+      return `推薦 Lv.${recommendedLevel} (最佳組合)`;
+    }
   }
 
   /**
@@ -295,8 +299,19 @@ class CharmUI {
       return;
     }
 
-    const maxLevel = window.CharmData.getMaxSkillLevel(skill.id);
-    const skillWithLevel = { ...skill, level: maxLevel };
+    const isCompatible = this.isSkillCompatible(skill.id);
+    let level;
+
+    if (isCompatible) {
+      // Use recommended level for compatible skills
+      level = window.CharmSuggestion.getRecommendedLevel(skill.id, this.selectedSkills);
+    } else {
+      // For incompatible skills, use max level to allow user to create an invalid combo for later analysis
+      level = window.CharmData.getMaxSkillLevel(skill.id);
+      this.showMessage("提示：此技能與目前組合不相容", "warning");
+    }
+
+    const skillWithLevel = { ...skill, level };
 
     this.selectedSkills.push(skillWithLevel);
     this.renderSelectedSkills();
@@ -396,7 +411,7 @@ class CharmUI {
     item.className = "skill-item";
 
     item.innerHTML = `
-            <img src="./imgs/${skill.color}.png" alt="${
+            <img src="./public/imgs/${skill.color}.png" alt="${
       skill.nameZh
     }" class="skill-icon" />
             <div class="skill-info">
@@ -423,7 +438,7 @@ class CharmUI {
             <button onclick="window.charmUI.removeSkill('${
               skill.id
             }')" class="delete-skill">
-                <img src="./imgs/trash.png" alt="刪除" class="trash-icon" />
+                <img src="./public/imgs/trash.png" alt="刪除" class="trash-icon" />
             </button>
         `;
 
@@ -543,7 +558,7 @@ class CharmUI {
                         </button>
                     </div>
                     <div class="no-results-illustration">
-                        <img src="./imgs/404.png" alt="No results" class="no-results-image" />
+                        <img src="./public/imgs/404.png" alt="No results" class="no-results-image" />
                     </div>
         `;
 
@@ -692,8 +707,8 @@ class CharmUI {
                         ${
                           result.detailedSkills &&
                           result.detailedSkills.length > 0
-                            ? `<img src="./imgs/${result.detailedSkills[0].color}.png" alt="${result.detailedSkills[0].nameZh}" class="template-icon" />`
-                            : `<img src="./imgs/placeholder_icon.png" alt="護石" class="template-icon" />`
+                            ? `<img src="./public/imgs/${result.detailedSkills[0].color}.png" alt="${result.detailedSkills[0].nameZh}" class="template-icon" />`
+                            : `<img src="./public/imgs/placeholder_icon.png" alt="護石" class="template-icon" />`
                         }
                         <div class="template-details">
                             <div class="template-name">${result.rarity} ${

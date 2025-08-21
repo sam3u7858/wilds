@@ -8,12 +8,12 @@
       name="description"
       content="專業的魔物獵人 Wilds 護石機率計算工具，精確計算技能組合和鑲嵌槽的獲得機率"
     />
-    <link rel="icon" href="./imgs/favicon.ico" />
+    <link rel="icon" href="./public/favicon.ico" />
 
     <!-- Preload critical fonts -->
     <link
       rel="preload"
-      href="./fonts/MantouSans-Regular.ttf"
+      href="./public/fonts/MantouSans-Regular.ttf"
       as="font"
       type="font/ttf"
       crossorigin
@@ -24,7 +24,7 @@
       /* Font Face Declarations */
       @font-face {
         font-family: "MantouSans";
-        src: url("./fonts/MantouSans-Regular.ttf") format("truetype");
+        src: url("./public/fonts/MantouSans-Regular.ttf") format("truetype");
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -109,7 +109,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="./imgs/logo.png" alt="Logo" class="logo" />
+            <img src="./public/imgs/logo.png" alt="Logo" class="logo" />
             <span class="brand-name">荒野計算機</span>
           </a>
         </div>
@@ -184,7 +184,11 @@
           <div class="language-switch">EN</div>
           <div class="user-section">
             <div class="user-avatar" onclick="toggleUserDropdown()">
-              <img src="./imgs/user_icon.png" alt="User" class="avatar" />
+              <img
+                src="./public/imgs/user_icon.png"
+                alt="User"
+                class="avatar"
+              />
               <div class="avatar-status-ring"></div>
             </div>
             <!-- User dropdown will be added here -->
@@ -208,7 +212,7 @@
                       <h3 class="charm-title">發光護石</h3>
                       <div class="charm-image-container">
                         <img
-                          src="./imgs/stone_template.png"
+                          src="./public/imgs/stone_template.png"
                           alt="護石"
                           class="charm-image"
                         />
@@ -231,7 +235,7 @@
                         <div class="charm-header">
                           <div class="charm-name">
                             <img
-                              src="./imgs/placeholder_icon.png"
+                              src="./public/imgs/placeholder_icon.png"
                               alt="護石圖標"
                               class="charm-icon"
                             />
@@ -502,12 +506,13 @@
     </div>
 
     <!-- Load main stylesheet -->
-    <link rel="stylesheet" href="./css/main.css" />
+    <link rel="stylesheet" href="./public/css/main.css" />
 
     <!-- Load JavaScript modules -->
-    <script src="./js/data.js"></script>
-    <script src="./js/calculator.js"></script>
-    <script src="./js/ui.js"></script>
-    <script src="./js/app.js"></script>
+    <script src="./public/js/data.js"></script>
+    <script src="./public/js/calculator.js"></script>
+    <script src="./public/js/suggestion.js"></script>
+    <script src="./public/js/ui.js"></script>
+    <script src="./public/js/app.js"></script>
   </body>
 </html>

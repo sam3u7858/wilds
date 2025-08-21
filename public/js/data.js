@@ -17,7 +17,7 @@ class CharmDataManager {
    */
   async loadRarities() {
     try {
-      const response = await fetch("./data/rarities.json");
+      const response = await fetch("./public/data/rarities.json");
       if (!response.ok) {
         throw new Error(`Failed to load rarities data: ${response.status}`);
       }
@@ -33,7 +33,7 @@ class CharmDataManager {
    */
   async loadSkillGroups() {
     try {
-      const response = await fetch("./data/skill_groups.json");
+      const response = await fetch("./public/data/skill_groups.json");
       if (!response.ok) {
         throw new Error(`Failed to load skill groups data: ${response.status}`);
       }
@@ -49,7 +49,7 @@ class CharmDataManager {
    */
   async loadSkills() {
     try {
-      const response = await fetch("./data/skills.json");
+      const response = await fetch("./public/data/skills.json");
       if (!response.ok) {
         throw new Error(`Failed to load skills data: ${response.status}`);
       }
