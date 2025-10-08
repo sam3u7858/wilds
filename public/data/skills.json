@@ -17,6 +17,7 @@
     { "id": "punishing_draw", "nameZh": "拔刀術【力】", "color": "564471" },
     { "id": "guard", "nameZh": "防禦性能", "color": "a38b6f" },
     { "id": "defense_boost", "nameZh": "防禦強化", "color": "a38b6f" },
+    { "id": "defense", "nameZh": "防禦", "color": "a38b6f" },
     { "id": "offensive_guard", "nameZh": "攻擊守勢", "color": "a38b6f" },
     { "id": "artillery", "nameZh": "砲術", "color": "737a7f" },
     { "id": "load_shells", "nameZh": "砲彈裝填", "color": "737a7f" },
