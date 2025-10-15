@@ -347,6 +347,13 @@ window.addEventListener("beforeunload", (event) => {
 /**
  * Service Worker 註冊（為未來的離線功能準備）
  */
+// Reset function for global access
+function resetAllSelections() {
+  if (window.charmUI) {
+    window.charmUI.resetAllSelections();
+  }
+}
+
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   window.addEventListener("load", () => {
     navigator.serviceWorker

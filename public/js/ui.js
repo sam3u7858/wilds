@@ -65,7 +65,7 @@ class CharmUI {
    * 初始化鑲嵌槽顯示
    */
   initializeSlots() {
-    this.initSlotSelector();
+    this.renderSlotPicker();
   }
 
   /**
@@ -108,78 +108,182 @@ class CharmUI {
   }
 
   /**
-   * 初始化槽位選擇器
+   * 圖片化槽位選擇器：渲染觸發器與選單
    */
-  initSlotSelector() {
-    const selector = document.getElementById('slotSelector');
-    if (!selector) return;
+  renderSlotPicker() {
+    const picker = document.getElementById('slotPicker');
+    const menu = document.getElementById('slotMenu');
+    if (!picker || !menu) return;
 
-    // 清空並添加預設選項
-    selector.innerHTML = '';
-    
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = this.isEnglish 
-      ? 'Select Slot Combination...' 
-      : '選擇鑲嵌槽組合...';
-    selector.appendChild(defaultOption);
+    // 渲染觸發器
+    picker.innerHTML = '';
+    picker.setAttribute('role', 'button');
+    picker.tabIndex = 0;
+    const triggerImg = document.createElement('img');
+    triggerImg.className = 'slot-trigger-image';
+    triggerImg.alt = this.isEnglish ? 'Selected Slots' : '已選鑲嵌槽';
+    triggerImg.loading = 'lazy';
+    const currentPath = this.getSlotIconPath(this.charmSlots);
+    if (currentPath) {
+      triggerImg.src = currentPath;
+    } else {
+      // 預設顯示 0-0-0
+      triggerImg.src = this.getSlotIconPath([]);
+    }
+    picker.appendChild(triggerImg);
 
-    // 定義所有可能的槽位組合
-    const slotOptions = this.isEnglish ? [
-      { value: '[]', label: 'No Slots' },
-      { value: '[1]', label: '[1] - One Lv1 Slot' },
-      { value: '[1,1]', label: '[1][1] - Two Lv1 Slots' },
-      { value: '[2]', label: '[2] - One Lv2 Slot' },
-      { value: '[2,1]', label: '[2][1] - Lv2+Lv1 Slots' },
-      { value: '[3]', label: '[3] - One Lv3 Slot' },
-      { value: '[-1]', label: '[W1] - Weapon Slot' },
-      { value: '[-1,1]', label: '[W1][1] - Weapon+Lv1 Slot' },
-      { value: '[-1,1,1]', label: '[W1][1][1] - Weapon+Two Lv1 Slots' }
-    ] : [
-      { value: '[]', label: '無鑲嵌槽' },
-      { value: '[1]', label: '[1] - 一個1級槽' },
-      { value: '[1,1]', label: '[1][1] - 兩個1級槽' },
-      { value: '[2]', label: '[2] - 一個2級槽' },
-      { value: '[2,1]', label: '[2][1] - 2級+1級槽' },
-      { value: '[3]', label: '[3] - 一個3級槽' },
-      { value: '[-1]', label: '[W1] - 武器槽' },
-      { value: '[-1,1]', label: '[W1][1] - 武器槽+1級槽' },
-      { value: '[-1,1,1]', label: '[W1][1][1] - 武器槽+兩個1級槽' }
-    ];
+    // 互動事件
+    const toggle = () => this.toggleSlotMenu();
+    picker.onclick = toggle;
+    picker.onkeydown = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
+      } else if (e.key === 'Escape') {
+        this.closeSlotMenu();
+      }
+    };
 
-    // 添加所有選項
-    slotOptions.forEach(option => {
-      const optionElement = document.createElement('option');
-      optionElement.value = option.value;
-      optionElement.textContent = option.label;
-      selector.appendChild(optionElement);
+    // 渲染選單項目
+    menu.innerHTML = '';
+    const options = this.getAllSlotOptions();
+    options.forEach((opt) => {
+      const item = document.createElement('div');
+      item.className = 'slot-option';
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-label', opt.label);
+      item.tabIndex = 0;
+
+      const img = document.createElement('img');
+      img.className = 'slot-option-image';
+      img.src = this.resolveSlotIconPath(opt.filename);
+      img.alt = opt.label;
+      img.loading = 'lazy';
+      item.appendChild(img);
+
+      const caption = document.createElement('div');
+      caption.className = 'slot-option-caption';
+      caption.textContent = opt.label;
+      item.appendChild(caption);
+
+      const selectHandler = () => this.handleSlotImageSelect(opt.value);
+      item.onclick = selectHandler;
+      item.onkeydown = (e) => {
+        if (e.key === 'Enter') selectHandler();
+      };
+
+      menu.appendChild(item);
     });
+  }
 
-    // 綁定變更事件
-    selector.addEventListener('change', () => this.handleSlotChange());
+  openSlotMenu() {
+    const menu = document.getElementById('slotMenu');
+    const picker = document.getElementById('slotPicker');
+    if (!menu || !picker) return;
+    menu.style.display = 'grid';
+    picker.setAttribute('aria-expanded', 'true');
+  }
+
+  closeSlotMenu() {
+    const menu = document.getElementById('slotMenu');
+    const picker = document.getElementById('slotPicker');
+    if (!menu || !picker) return;
+    menu.style.display = 'none';
+    picker.setAttribute('aria-expanded', 'false');
+  }
+
+  toggleSlotMenu() {
+    const menu = document.getElementById('slotMenu');
+    if (!menu) return;
+    const isOpen = menu.style.display !== 'none' && menu.style.display !== '';
+    if (isOpen) this.closeSlotMenu();
+    else this.openSlotMenu();
+  }
+
+  /**
+   * 使用者選擇圖片時設定槽位
+   */
+  handleSlotImageSelect(valueArray) {
+    this.charmSlots = [...valueArray];
+    this.closeSlotMenu();
+    this.renderSlotPicker();
+    this.performCalculation();
+  }
+
+  /**
+   * 取得所有圖片選項（含 i18n 標題）
+   */
+  getAllSlotOptions() {
+    const zh = [
+      { value: [], filename: '0-0-0.png', label: '無鑲嵌槽' },
+      { value: [1], filename: '1-0-0.png', label: '[1]' },
+      { value: [1, 1], filename: '1-1-0.png', label: '[1][1]' },
+      { value: [2], filename: '2-0-0.png', label: '[2]' },
+      { value: [2, 1], filename: '2-1-0.png', label: '[2][1]' },
+      { value: [3], filename: '3-0-0.png', label: '[3]' },
+      { value: [-1], filename: 'w1-0-0.png', label: '[W1]' },
+      { value: [-1, 1], filename: 'w1-1-0.png', label: '[W1][1]' },
+      { value: [-1, 1, 1], filename: 'w1-1-1.png', label: '[W1][1][1]' },
+    ];
+    const en = [
+      { value: [], filename: '0-0-0.png', label: 'No Slots' },
+      { value: [1], filename: '1-0-0.png', label: '[1]' },
+      { value: [1, 1], filename: '1-1-0.png', label: '[1][1]' },
+      { value: [2], filename: '2-0-0.png', label: '[2]' },
+      { value: [2, 1], filename: '2-1-0.png', label: '[2][1]' },
+      { value: [3], filename: '3-0-0.png', label: '[3]' },
+      { value: [-1], filename: 'w1-0-0.png', label: '[W1]' },
+      { value: [-1, 1], filename: 'w1-1-0.png', label: '[W1][1]' },
+      { value: [-1, 1, 1], filename: 'w1-1-1.png', label: '[W1][1][1]' },
+    ];
+    return this.isEnglish ? en : zh;
+  }
+
+  /**
+   * 將當前值轉為圖片路徑
+   */
+  getSlotIconPath(valueArray) {
+    const filenameMap = new Map([
+      [JSON.stringify([]), '0-0-0.png'],
+      [JSON.stringify([1]), '1-0-0.png'],
+      [JSON.stringify([1, 1]), '1-1-0.png'],
+      [JSON.stringify([2]), '2-0-0.png'],
+      [JSON.stringify([2, 1]), '2-1-0.png'],
+      [JSON.stringify([3]), '3-0-0.png'],
+      [JSON.stringify([-1]), 'w1-0-0.png'],
+      [JSON.stringify([-1, 1]), 'w1-1-0.png'],
+      [JSON.stringify([-1, 1, 1]), 'w1-1-1.png'],
+    ]);
+    const filename = filenameMap.get(JSON.stringify(valueArray || []));
+    if (!filename) return '';
+    return this.resolveSlotIconPath(filename);
+  }
+
+  resolveSlotIconPath(filename) {
+    const base = this.isEnglish ? '../public/imgs/slot_icons/' : './public/imgs/slot_icons/';
+    return base + filename;
   }
 
   /**
    * 處理槽位選擇變更
    */
   handleSlotChange() {
-    const selector = document.getElementById('slotSelector');
-    if (!selector) return;
+    // legacy no-op: kept for backward compatibility
+  }
 
-    const selectedValue = selector.value;
+  /**
+   * 重置所有選擇
+   */
+  resetAllSelections() {
+    // 清空選擇的技能
+    this.selectedSkills = [];
     
-    if (selectedValue === '') {
-      this.charmSlots = [];
-    } else {
-      // 解析選中的槽位組合
-      try {
-        this.charmSlots = JSON.parse(selectedValue);
-      } catch (e) {
-        console.error('Invalid slot combination:', selectedValue);
-        this.charmSlots = [];
-      }
-    }
-
+    // 重置槽位選擇器
+    this.charmSlots = [];
+    this.renderSlotPicker();
+    
+    // 重新渲染 UI
+    this.renderSelectedSkills();
     this.performCalculation();
   }
 
