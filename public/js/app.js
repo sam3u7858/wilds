@@ -335,7 +335,7 @@ window.addEventListener("beforeunload", (event) => {
   const hasSelections =
     window.charmUI &&
     (window.charmUI.selectedSkills.length > 0 ||
-      window.charmUI.charmSlots.some((slot) => slot !== 0));
+      window.charmUI.charmSlots.length > 0);
 
   if (hasSelections) {
     // 現代瀏覽器會顯示通用訊息

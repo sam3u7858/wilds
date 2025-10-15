@@ -364,48 +364,33 @@
   color: #ccc;
 }
 
-.slot-indicators {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.slot {
-  color: #666;
-  font-family: monospace;
+.slot-selector {
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 12px;
+  min-width: 200px;
   cursor: pointer;
   transition: all 0.3s ease;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  user-select: none;
 }
 
-.slot:hover {
-  background: rgba(217, 242, 11, 0.1);
-  color: #d9f20b;
+.slot-selector:hover {
+  border-color: #d9f20b;
+  background: rgba(217, 242, 11, 0.05);
 }
 
-.slot.empty {
-  color: #666;
+.slot-selector:focus {
+  outline: none;
+  border-color: #d9f20b;
+  box-shadow: 0 0 0 2px rgba(217, 242, 11, 0.2);
 }
 
-.slot.weapon-slot {
-  color: #d9f20b;
-  background: rgba(217, 242, 11, 0.1);
-}
-
-.slot.level-1 {
-  color: #75b058;
-  background: rgba(117, 176, 88, 0.1);
-}
-
-.slot.level-2 {
-  color: #ceb459;
-  background: rgba(206, 180, 89, 0.1);
-}
-
-.slot.level-3 {
-  color: #a99967;
-  background: rgba(169, 153, 103, 0.1);
+.slot-selector option {
+  background: #1f1f1f;
+  color: #fff;
+  padding: 8px;
 }
 
 /* Skills */

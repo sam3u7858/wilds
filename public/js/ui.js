@@ -6,7 +6,7 @@ class CharmUI {
   constructor() {
     // 狀態管理
     this.selectedSkills = [];
-    this.charmSlots = [0, 0, 0]; // -1 = W1, 0 = empty, 1-3 = level
+    this.charmSlots = []; // Store complete slot combination array
     this.calculationResults = [];
     this.timeEstimation = null;
     this.isCalculating = false;
@@ -65,7 +65,7 @@ class CharmUI {
    * 初始化鑲嵌槽顯示
    */
   initializeSlots() {
-    this.renderSlots();
+    this.initSlotSelector();
   }
 
   /**
@@ -108,50 +108,78 @@ class CharmUI {
   }
 
   /**
-   * 渲染鑲嵌槽
+   * 初始化槽位選擇器
    */
-  renderSlots() {
-    const slotsContainer = document.getElementById("charmSlots");
-    if (!slotsContainer) return;
+  initSlotSelector() {
+    const selector = document.getElementById('slotSelector');
+    if (!selector) return;
 
-    slotsContainer.innerHTML = "";
+    // 清空並添加預設選項
+    selector.innerHTML = '';
+    
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = this.isEnglish 
+      ? 'Select Slot Combination...' 
+      : '選擇鑲嵌槽組合...';
+    selector.appendChild(defaultOption);
 
-    this.charmSlots.forEach((slot, index) => {
-      const slotElement = document.createElement("span");
-      slotElement.className = "slot";
-      slotElement.onclick = () => this.toggleSlot(index);
+    // 定義所有可能的槽位組合
+    const slotOptions = this.isEnglish ? [
+      { value: '[]', label: 'No Slots' },
+      { value: '[1]', label: '[1] - One Lv1 Slot' },
+      { value: '[1,1]', label: '[1][1] - Two Lv1 Slots' },
+      { value: '[2]', label: '[2] - One Lv2 Slot' },
+      { value: '[2,1]', label: '[2][1] - Lv2+Lv1 Slots' },
+      { value: '[3]', label: '[3] - One Lv3 Slot' },
+      { value: '[-1]', label: '[W1] - Weapon Slot' },
+      { value: '[-1,1]', label: '[W1][1] - Weapon+Lv1 Slot' },
+      { value: '[-1,1,1]', label: '[W1][1][1] - Weapon+Two Lv1 Slots' }
+    ] : [
+      { value: '[]', label: '無鑲嵌槽' },
+      { value: '[1]', label: '[1] - 一個1級槽' },
+      { value: '[1,1]', label: '[1][1] - 兩個1級槽' },
+      { value: '[2]', label: '[2] - 一個2級槽' },
+      { value: '[2,1]', label: '[2][1] - 2級+1級槽' },
+      { value: '[3]', label: '[3] - 一個3級槽' },
+      { value: '[-1]', label: '[W1] - 武器槽' },
+      { value: '[-1,1]', label: '[W1][1] - 武器槽+1級槽' },
+      { value: '[-1,1,1]', label: '[W1][1][1] - 武器槽+兩個1級槽' }
+    ];
 
-      // 設定槽位樣式和內容
-      if (slot === -1) {
-        slotElement.classList.add("weapon-slot");
-        slotElement.textContent = "[W1]";
-      } else if (slot === 0) {
-        slotElement.classList.add("empty");
-        slotElement.textContent = "[ ]";
-      } else {
-        slotElement.classList.add(`level-${slot}`);
-        slotElement.textContent = `[${slot}]`;
-      }
-
-      slotsContainer.appendChild(slotElement);
+    // 添加所有選項
+    slotOptions.forEach(option => {
+      const optionElement = document.createElement('option');
+      optionElement.value = option.value;
+      optionElement.textContent = option.label;
+      selector.appendChild(optionElement);
     });
+
+    // 綁定變更事件
+    selector.addEventListener('change', () => this.handleSlotChange());
   }
 
   /**
-   * 切換槽位狀態
+   * 處理槽位選擇變更
    */
-  toggleSlot(index) {
-    const currentLevel = this.charmSlots[index];
-    // 循環：0 -> 1 -> 2 -> 3 -> -1 -> 0
-    if (currentLevel === 3) {
-      this.charmSlots[index] = -1;
-    } else if (currentLevel === -1) {
-      this.charmSlots[index] = 0;
+  handleSlotChange() {
+    const selector = document.getElementById('slotSelector');
+    if (!selector) return;
+
+    const selectedValue = selector.value;
+    
+    if (selectedValue === '') {
+      this.charmSlots = [];
     } else {
-      this.charmSlots[index] = currentLevel + 1;
+      // 解析選中的槽位組合
+      try {
+        this.charmSlots = JSON.parse(selectedValue);
+      } catch (e) {
+        console.error('Invalid slot combination:', selectedValue);
+        this.charmSlots = [];
+      }
     }
 
-    this.renderSlots();
     this.performCalculation();
   }
 
@@ -557,7 +585,7 @@ class CharmUI {
       targetSkills: this.selectedSkills
         .filter((skill) => skill.level && skill.level > 0)
         .map((skill) => ({ skillId: skill.id, level: skill.level })),
-      targetSlots: this.charmSlots.filter((slot) => slot !== 0),
+      targetSlots: this.charmSlots,
       minRarity: "R5",
       maxRarity: "R8",
     };

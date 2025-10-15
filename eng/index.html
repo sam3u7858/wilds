@@ -280,7 +280,9 @@
         </div>
 
         <div class="nav-right">
-          <a class="language-switch" href="../index.html" style="color: white">中文</a>
+          <a class="language-switch" href="../index.html" style="color: white"
+            >中文</a
+          >
           <div class="user-section">
             <div class="user-avatar" onclick="toggleUserDropdown()">
               <img
@@ -367,9 +369,9 @@
                         </div>
                         <div class="charm-slots">
                           <span class="slots-label">Slots</span>
-                          <div class="slot-indicators" id="charmSlots">
-                            <!-- Slots will be dynamically generated -->
-                          </div>
+                          <select class="slot-selector" id="slotSelector">
+                            <!-- Options will be populated by JS -->
+                          </select>
                         </div>
                       </div>
                     </div>

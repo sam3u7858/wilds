@@ -59,12 +59,10 @@ const CharmImageExporter = {
 
       // 繪製鑲嵌槽
       let slotX = rightX;
-      charmSlots
-        .filter((s) => s !== 0)
-        .forEach((slot) => {
-          ctx.fillText(slot === -1 ? "[W1]" : `[${slot}]`, slotX, currentY);
-          slotX += 40;
-        });
+      charmSlots.forEach((slot) => {
+        ctx.fillText(slot === -1 ? "[W1]" : `[${slot}]`, slotX, currentY);
+        slotX += 40;
+      });
       currentY += 50;
 
       ctx.fillStyle = "#d9f20b";
