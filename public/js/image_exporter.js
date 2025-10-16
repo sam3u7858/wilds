@@ -57,13 +57,27 @@ const CharmImageExporter = {
       ctx.fillText("發光護石", rightX, currentY);
       currentY += 30;
 
-      // 繪製鑲嵌槽
-      let slotX = rightX;
-      charmSlots.forEach((slot) => {
-        ctx.fillText(slot === -1 ? "[W1]" : `[${slot}]`, slotX, currentY);
-        slotX += 40;
-      });
-      currentY += 50;
+      // 繪製鑲嵌槽（使用圖片）
+      try {
+        const slotIconPath = this.getSlotIconPath(charmSlots);
+        if (slotIconPath) {
+          const slotIcon = await this.loadImage(slotIconPath);
+          const iconW = 260; // display width
+          const iconH = iconW * (slotIcon.height / slotIcon.width);
+          ctx.drawImage(slotIcon, rightX, currentY - 6, iconW, iconH);
+          currentY += iconH + 20;
+        } else {
+          currentY += 20;
+        }
+      } catch (e) {
+        // fallback: show textual slots
+        let slotX = rightX;
+        charmSlots.forEach((slot) => {
+          ctx.fillText(slot === -1 ? "[W1]" : `[${slot}]`, slotX, currentY);
+          slotX += 40;
+        });
+        currentY += 50;
+      }
 
       ctx.fillStyle = "#d9f20b";
       ctx.font = 'bold 26px "Noto Sans TC", sans-serif';
@@ -179,6 +193,31 @@ const CharmImageExporter = {
       img.onerror = (err) => reject(err);
       img.src = src;
     });
+  },
+
+  /**
+   * Map current slots to icon path used in UI picker
+   */
+  getSlotIconPath(slotsArray) {
+    const key = JSON.stringify(slotsArray || []);
+    const map = new Map([
+      [JSON.stringify([]), '0-0-0.png'],
+      [JSON.stringify([1]), '1-0-0.png'],
+      [JSON.stringify([1, 1]), '1-1-0.png'],
+      [JSON.stringify([2]), '2-0-0.png'],
+      [JSON.stringify([2, 1]), '2-1-0.png'],
+      [JSON.stringify([3]), '3-0-0.png'],
+      [JSON.stringify([-1]), 'w1-0-0.png'],
+      [JSON.stringify([-1, 1]), 'w1-1-0.png'],
+      [JSON.stringify([-1, 1, 1]), 'w1-1-1.png'],
+    ]);
+    const filename = map.get(key);
+    if (!filename) return '';
+    const isEnglish = window.location.pathname.includes('/eng/');
+    const base = isEnglish
+      ? '../public/imgs/slot_icons/'
+      : './public/imgs/slot_icons/';
+    return base + filename;
   },
 
   downloadCanvas(canvas) {
